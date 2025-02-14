@@ -1,11 +1,82 @@
+function detectMobileUser() {
+  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    alert(
+      "For get best experience, rotate your device or please use a desktop browser."
+    );
+  }
+}
+function showMobileControls() {
+  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    document.querySelector(".mobile-controls").style.display = "flex";
+  }
+}
+
+showMobileControls();
+
+detectMobileUser();
+
 const gun = document.querySelector(".gun");
 const fireSound = new Audio("./assets/sound/ak47.mp3");
 const scoreElement = document.querySelector(".score");
 let gameRunning = true;
 let enemyInterval;
-let score = 0; // Initialize score
-let isFiring = false; // Flag to track if the mouse is being pressed down
+let score = 0;
+let isFiring = false;
 
+// Mobile Control Elements
+const upButton = document.querySelector(".up-button");
+const downButton = document.querySelector(".down-button");
+const fireButton = document.querySelector(".fire-button");
+
+// Mobile Movement Speed
+const moveSpeed = 10;
+let moveInterval = null;
+
+// Mobile Controls Event Listeners
+function moveGun(direction) {
+  const currentTop = parseInt(gun.style.top) || 0;
+  let newTop = currentTop + (direction === "up" ? -moveSpeed : moveSpeed);
+
+  // Bounds checking
+  const minY = 5;
+  const maxY = window.innerHeight - gun.clientHeight - 15;
+  newTop = Math.max(minY, Math.min(newTop, maxY));
+
+  gun.style.top = `${newTop}px`;
+}
+
+// Up Button
+upButton.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  moveInterval = setInterval(() => moveGun("up"), 16);
+});
+
+upButton.addEventListener("touchend", () => {
+  clearInterval(moveInterval);
+});
+
+// Down Button
+downButton.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  moveInterval = setInterval(() => moveGun("down"), 16);
+});
+
+downButton.addEventListener("touchend", () => {
+  clearInterval(moveInterval);
+});
+
+// Fire Button
+fireButton.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  isFiring = true;
+  fireBullet();
+});
+
+fireButton.addEventListener("touchend", () => {
+  isFiring = false;
+});
+
+// Keep existing mouse controls for desktop
 document.addEventListener("mousemove", (event) => {
   let y = event.clientY;
   let minY = 5;
@@ -17,7 +88,7 @@ document.addEventListener("mousemove", (event) => {
 document.addEventListener("mousedown", (event) => {
   if (event.button === 0) {
     isFiring = true;
-    fireBullet(); // Fire initially
+    fireBullet();
   }
 });
 
@@ -31,8 +102,12 @@ function fireBullet() {
   const bullet = document.createElement("img");
   bullet.src = "./assets/bullet.png";
   bullet.classList.add("bullet");
-  document.querySelector(".game-container").appendChild(bullet); // Bullet inside game-container
+  document.querySelector(".game-container").appendChild(bullet);
 
+  // Check if the user is on a mobile device
+  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    bullet.style.width = "10px";
+  }
   const gunY = gun.offsetTop + gun.clientHeight / 2 - 10;
   bullet.style.top = `${gunY}px`;
   bullet.style.left = "168px";
@@ -42,7 +117,7 @@ function fireBullet() {
   flame.classList.add("flame");
   flame.style.top = `${gunY - 18}px`;
   flame.style.left = "160px";
-  document.querySelector(".game-container").appendChild(flame); // Flame inside game-container
+  document.querySelector(".game-container").appendChild(flame);
 
   setTimeout(() => {
     flame.style.opacity = 0;
@@ -62,7 +137,7 @@ function fireBullet() {
         bullet.remove();
         enemy.remove();
         clearInterval(checkCollision);
-        increaseScore(); // Increase score on enemy hit
+        increaseScore();
       }
     });
   }, 10);
@@ -73,14 +148,13 @@ function fireBullet() {
   }, 1000);
 
   if (isFiring) {
-    setTimeout(fireBullet, 100); // Delay between shots to simulate automatic fire
+    setTimeout(fireBullet, 100);
   }
 }
 
 function spawnEnemy() {
   if (!gameRunning) return;
 
-  // Randomly determine how many enemies to spawn (1 to 4)
   const numberOfEnemies = Math.floor(Math.random() * 4) + 1;
 
   for (let i = 0; i < numberOfEnemies; i++) {
@@ -88,13 +162,13 @@ function spawnEnemy() {
     const enemyNumber = Math.floor(Math.random() * 6) + 1;
     enemy.src = `./assets/enemy/e${enemyNumber}.png`;
     enemy.classList.add("enemy");
-    document.querySelector(".game-container").appendChild(enemy); // Enemy inside game-container
+    document.querySelector(".game-container").appendChild(enemy);
 
     const enemyY = Math.random() * (window.innerHeight - 100);
-    const horizontalOffset = i * 300; // Horizontal spacing between enemies
+    const horizontalOffset = i * 300;
 
     enemy.style.top = `${enemyY}px`;
-    enemy.style.left = `${window.innerWidth + horizontalOffset}px`; // Add offset for spacing
+    enemy.style.left = `${window.innerWidth + horizontalOffset}px`;
 
     setTimeout(() => {
       enemy.style.left = `-${enemy.clientWidth + horizontalOffset}px`;
@@ -115,7 +189,7 @@ function spawnEnemy() {
         enemy.remove();
         clearInterval(checkLineCross);
       }
-    }, 6000); // Adjust time based on speed
+    }, 6000);
   }
 }
 
@@ -147,7 +221,7 @@ function hasCrossedLine(enemy) {
   const dangerLineRect = document
     .querySelector(".danger-line")
     .getBoundingClientRect();
-  return enemyRect.left <= dangerLineRect.right; // Check if enemy touches the danger line
+  return enemyRect.left <= dangerLineRect.right;
 }
 
 function showExplosion(enemy) {
@@ -158,14 +232,14 @@ function showExplosion(enemy) {
   explosion.classList.add("explosion");
   explosion.style.top = `${enemy.offsetTop}px`;
   explosion.style.left = `${enemy.offsetLeft}px`;
-  document.querySelector(".game-container").appendChild(explosion); // Explosion inside game-container
+  document.querySelector(".game-container").appendChild(explosion);
 
   setTimeout(() => explosion.remove(), 500);
 }
 
 function increaseScore() {
-  score++; // Increment score by 1
-  scoreElement.textContent = `Score: ${score}`; // Update score display
+  score++;
+  scoreElement.textContent = `Score: ${score}`;
 }
 
 function gameOver() {
@@ -177,8 +251,8 @@ function gameOver() {
 
 function restartGame() {
   document.querySelector(".game-over").style.display = "none";
-  score = 0; // Reset score
-  scoreElement.textContent = `Score: ${score}`; // Update score display
+  score = 0;
+  scoreElement.textContent = `Score: ${score}`;
   gameRunning = true;
   document.querySelectorAll(".enemy").forEach((enemy) => enemy.remove());
   startSpawning();
