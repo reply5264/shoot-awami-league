@@ -1,0 +1,103 @@
+body {
+    position: relative;
+    margin: 10px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    user-select: none;
+    padding: 0;
+    background-color: #000;
+    /* Dark background to avoid any white space around the game */
+}
+
+.visit {
+    position: fixed;
+    top: 7px;
+    right: 7px;
+}
+
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 95%;
+    max-width: 1200px;
+    /* Ensure the game area doesn't exceed a certain width */
+    max-height: 800px;
+    /* Ensure the game area doesn't exceed a certain height */
+    border: 5px solid #fff;
+    /* Adding border around the game area */
+    margin: 10px;
+    /* Adding 10px margin */
+    background-image: url("./assets/bg.jpg");
+    /* Set background image here */
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.gun {
+    position: absolute;
+    left: 50px;
+    width: 120px;
+}
+
+.bullet {
+    position: absolute;
+    width: 20px;
+    transition: transform 1s linear;
+}
+
+.flame {
+    position: absolute;
+    width: 50px;
+    height: 40px;
+    transition: opacity 0.2s linear;
+}
+
+.enemy {
+    position: absolute;
+    width: 80px;
+    transition: left 6s linear;
+    /* Slower enemy speed */
+}
+
+.explosion {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+}
+
+.danger-line {
+    position: absolute;
+    top: 0;
+    left: 18%;
+    width: 15px;
+    height: 100vh;
+    background-color: red;
+}
+
+.game-over {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    font-size: 24px;
+    text-align: center;
+    border-radius: 10px;
+    display: none;
+}
+
+.score {
+    position: fixed;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
