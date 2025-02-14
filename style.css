@@ -16,6 +16,7 @@ body {
     position: fixed;
     top: 7px;
     right: 7px;
+    z-index: 2;
 }
 
 .game-container {
@@ -41,6 +42,7 @@ body {
     position: absolute;
     left: 50px;
     width: 120px;
+    z-index: 2;
 }
 
 .bullet {
@@ -100,4 +102,10 @@ body {
     color: white;
     font-size: 24px;
     font-weight: bold;
+}
+
+@media (max-width: 768px) {
+ .enemy{
+    width: 50px;
+ }
 }
