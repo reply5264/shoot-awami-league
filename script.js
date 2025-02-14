@@ -89,6 +89,9 @@ document.addEventListener("mousedown", (event) => {
   if (event.button === 0) {
     isFiring = true;
     fireBullet();
+  } else if (event.button === 2) {
+    isFiring = true;
+    fireBullet();
   }
 });
 
