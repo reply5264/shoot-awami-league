@@ -15,6 +15,24 @@ showMobileControls();
 
 detectMobileUser();
 
+function playMusic() {
+  document.addEventListener("DOMContentLoaded", function () {
+    let audio = document.createElement("audio");
+    audio.src = "./assets/sound/bg_music.mp3"; // Change to your music file URL
+    audio.loop = true;
+    audio.autoplay = true;
+    audio.play();
+
+    // Ensure autoplay works by handling user interaction
+    document.body.addEventListener("click", function () {
+      audio.play();
+    });
+
+    document.body.appendChild(audio);
+  });
+}
+playMusic();
+
 const gun = document.querySelector(".gun");
 const fireSound = new Audio("./assets/sound/ak47.mp3");
 const scoreElement = document.querySelector(".score");
