@@ -26,7 +26,7 @@ body {
     max-height: 800px;
     border: 5px solid #fff;
     margin: 10px;
-    background-image: url("./assets/bg.jpg");
+    background-image: url("./assets/bg.png");
     background-size: cover;
     background-repeat: no-repeat;
     overflow: hidden;
